@@ -1,7 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const userRouter = require('./routes/userRouter');
+const movieRouter = require('./routes/movie/movieRouter');
+const userRouter = require('./routes/user/userRouter');
 const mongoose = require('mongoose');
 
 require('dotenv').config()
@@ -21,8 +22,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(express.json())
 
 app.use('/user', userRouter);
+app.use('/movie', movieRouter);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
