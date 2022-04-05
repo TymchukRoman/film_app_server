@@ -12,22 +12,21 @@ router.post('/me', authenticateToken, (req, res) => {
 })
 
 router.post('/register', async (req, res) => {
-    const { username, email, password } = req.body;
-    console.log(username, email, password);
+    const { name, email, password } = req.body;
+    console.log(name, email, password);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = new User({
-        username,
+        name,
         email,
         password: hashedPassword,
         registerDatetime: moment(),
     })
 
-    const token = generateAccessToken(user._id, user.username);
+    const token = generateAccessToken(user._id, user.name);
 
     user.save().then((doc) => res.json({ token, user: doc }));
-
 })
 
 router.post('/login', async (req, res) => {
@@ -36,7 +35,7 @@ router.post('/login', async (req, res) => {
     if (user) {
         const validPassword = await bcrypt.compare(password, user.password);
         if (validPassword) {
-            const token = generateAccessToken(user._id, user.username);
+            const token = generateAccessToken(user._id, user.name);
             res.json({ token });
         } else {
             res.status(400).json({ error: "Invalid Password" });
