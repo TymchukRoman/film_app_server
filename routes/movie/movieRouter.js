@@ -6,6 +6,7 @@ const Comment = require('../../models/commentModel');
 const User = require('../../models/userModel');
 const authenticateToken = require('../user/authMiddleware');
 const { default: mongoose } = require('mongoose');
+const generateParams = require('./generateParams');
 
 router.get('/all/:page/:limit', async (req, res) => {
     const { page, limit } = req.params;
@@ -24,6 +25,29 @@ router.get('/all/:page/:limit', async (req, res) => {
         movies,
         totalPages: Math.ceil(count / limit),
         currentPage: page
+    });
+})
+
+router.post('/search', async (req, res) => {
+    const { params, page, limit } = req.body;
+
+    const searchParams = generateParams(params);
+
+    const movies = await Movie.find(searchParams)
+        .sort('-year')
+        .limit(3)
+        // .skip((page - 1) * limit)
+        .select('title year imdb type genres plot fullplot')
+        .exec();
+
+    // get total documents in the Movie collection 
+    // const count = await Movie.countDocuments();
+
+    // return response with posts, total pages, and current page
+    res.json({
+        movies,
+        // totalPages: Math.ceil(count / limit),
+        // currentPage: page
     });
 })
 
