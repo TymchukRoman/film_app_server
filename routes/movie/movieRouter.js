@@ -27,5 +27,30 @@ router.get('/all/:page/:limit', async (req, res) => {
     });
 })
 
+router.get('/id/:movieId', async (req, res) => {
+    const { movieId } = req.params;
+
+    const movie = await Movie.findById(movieId);
+
+    res.json({ movie });
+})
+
+router.post('/leaveComment', authenticateToken, async (req, res) => {
+
+    const { movie_id, text } = req.body;
+    const { userId } = req.user;
+
+    const user = await User.findById(userId);
+
+    const comment = new Comment({
+        name: user.name || user.username || "AnonymousUser",
+        email: user.email || "AnonymousUser",
+        movie_id: mongoose.Types.ObjectId(movie_id),
+        text,
+        date: moment().toDate()
+    })
+
+    comment.save().then((doc) => res.json({ comment: doc }));
+})
 
 module.exports = router;
