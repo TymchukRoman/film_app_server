@@ -14,40 +14,36 @@ router.get('/all/:page/:limit', async (req, res) => {
     const movies = await Movie.find()
         .limit(limit * 1)
         .skip((page - 1) * limit)
-        .select('title')
         .exec();
 
-    // get total documents in the Movie collection 
     const count = await Movie.countDocuments();
 
-    // return response with posts, total pages, and current page
     res.json({
         movies,
         totalPages: Math.ceil(count / limit),
-        currentPage: page
+        currentPage: page,
+        limit
     });
 })
 
 router.post('/search', async (req, res) => {
-    const { params, page, limit } = req.body;
+    const { params, page, limit, sort } = req.body;
 
     const searchParams = generateParams(params);
 
     const movies = await Movie.find(searchParams)
-        .sort('-year')
-        .limit(3)
-        // .skip((page - 1) * limit)
-        .select('title year imdb type genres plot fullplot')
+        .sort(sort)
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
         .exec();
 
-    // get total documents in the Movie collection 
-    // const count = await Movie.countDocuments();
-
-    // return response with posts, total pages, and current page
+    const count = await Movie.find(searchParams).countDocuments();
+    
     res.json({
         movies,
-        // totalPages: Math.ceil(count / limit),
-        // currentPage: page
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+        limit
     });
 })
 
@@ -75,6 +71,35 @@ router.post('/leaveComment', authenticateToken, async (req, res) => {
     })
 
     comment.save().then((doc) => res.json({ comment: doc }));
+})
+
+router.get('/genres', async (req, res) => {
+    try {
+        const movies = await Movie.find();
+
+        console.log(`Received ${movies.length} movies`);
+
+        const genres = [];
+        const types = [];
+
+        movies.forEach(movie => {
+            movie?.genres?.forEach(genre => {
+                if (!genres.includes(genre)) {
+                    console.log(`Getted genre: ${genre}`);
+                    genres.push(genre);
+                }
+            })
+            if (!types.includes(movie.type)) {
+                console.log(`Getted type: ${movie.type}`);
+                types.push(movie.type);
+            }
+        })
+
+        return res.json({ genres, types });
+    } catch (err) {
+        console.error(err);
+    }
+
 })
 
 module.exports = router;
