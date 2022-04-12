@@ -3,7 +3,7 @@ const moment = require('moment');
 const router = express.Router();
 const Movie = require('../../models/movieModel');
 const User = require('../../models/userModel');
-const authenticateToken = require('./authMiddleware');
+const authenticateToken = require('../middleware/authMiddleware');
 const bcrypt = require('bcrypt');
 const generateAccessToken = require('./generateJWT');
 

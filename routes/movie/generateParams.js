@@ -19,7 +19,7 @@ const generateParams = (params) => {
         )
     }
 
-    if (params.genres.length) {
+    if (params.genres?.length) {
         searchParams.$and.push(
             {
                 genres: { $all: [...params.genres] }
@@ -43,7 +43,7 @@ const generateParams = (params) => {
         )
     }
 
-    if (params.types.length) {
+    if (params.types?.length) {
         searchParams.$and.push(
             {
                 type: { $in: [...params.types] }
