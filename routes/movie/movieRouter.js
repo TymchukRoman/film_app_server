@@ -1,22 +1,26 @@
 const express = require('express');
-const moment = require('moment');
 const router = express.Router();
 const Movie = require('../../models/movieModel');
-const Comment = require('../../models/commentModel');
-const User = require('../../models/userModel');
-const authenticateToken = require('../user/authMiddleware');
-const { default: mongoose } = require('mongoose');
 const generateParams = require('./generateParams');
 
 router.get('/all/:page/:limit', async (req, res) => {
-    const { page, limit } = req.params;
+    let { page, limit } = req.params;
+
+    const count = await Movie.countDocuments();
+
+    if (limit > 21 || limit < 1) {
+        limit = 21;
+    }
+
+    if (page > Math.ceil(count / limit)) {
+        page = Math.ceil(count / limit);
+    }
 
     const movies = await Movie.find()
         .limit(limit * 1)
         .skip((page - 1) * limit)
         .exec();
 
-    const count = await Movie.countDocuments();
 
     res.json({
         movies,
@@ -27,9 +31,19 @@ router.get('/all/:page/:limit', async (req, res) => {
 })
 
 router.post('/search', async (req, res) => {
-    const { params, page, limit, sort } = req.body;
+    let { params, page, limit, sort } = req.body;
 
     const searchParams = generateParams(params);
+
+    const count = await Movie.find(searchParams).countDocuments();
+
+    if (limit > 21 || limit < 1) {
+        limit = 21;
+    }
+
+    if (page > Math.ceil(count / limit)) {
+        page = Math.ceil(count / limit);
+    }
 
     const movies = await Movie.find(searchParams)
         .sort(sort)
@@ -37,8 +51,7 @@ router.post('/search', async (req, res) => {
         .skip((page - 1) * limit)
         .exec();
 
-    const count = await Movie.find(searchParams).countDocuments();
-    
+
     res.json({
         movies,
         totalPages: Math.ceil(count / limit),
@@ -53,24 +66,6 @@ router.get('/id/:movieId', async (req, res) => {
     const movie = await Movie.findById(movieId);
 
     res.json({ movie });
-})
-
-router.post('/leaveComment', authenticateToken, async (req, res) => {
-
-    const { movie_id, text } = req.body;
-    const { userId } = req.user;
-
-    const user = await User.findById(userId);
-
-    const comment = new Comment({
-        name: user.name || user.username || "AnonymousUser",
-        email: user.email || "AnonymousUser",
-        movie_id: mongoose.Types.ObjectId(movie_id),
-        text,
-        date: moment().toDate()
-    })
-
-    comment.save().then((doc) => res.json({ comment: doc }));
 })
 
 router.get('/genres', async (req, res) => {
