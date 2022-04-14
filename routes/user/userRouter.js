@@ -6,41 +6,61 @@ const User = require('../../models/userModel');
 const authenticateToken = require('../middleware/authMiddleware');
 const bcrypt = require('bcrypt');
 const generateAccessToken = require('./generateJWT');
+const userValidator = require('./userValidator');
 
 router.post('/me', authenticateToken, (req, res) => {
-    res.json({ user: req.user });
+    return res.json({ user: req.user });
 })
 
 router.post('/register', async (req, res) => {
-    const { name, email, password } = req.body;
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    try {
+        const { name, email, password } = req.body;
 
-    const user = new User({
-        name,
-        email,
-        password: hashedPassword,
-        registerDatetime: moment(),
-    })
+        const { error } = userValidator.registerValidation(name, email, password);
+        if (error) {
+            return res.json({ error });
+        }
 
-    const token = generateAccessToken(user._id, user.name);
+        const userExist = await User.findOne({ email });
+        if (userExist) {
+            return res.json({ error: 'Email already in use' });
+        }
 
-    user.save().then((doc) => res.json({ token, user: doc }));
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const user = new User({
+            name,
+            email,
+            password: hashedPassword,
+            registerDatetime: moment(),
+        })
+
+        const token = generateAccessToken(user._id, user.name);
+
+        return user.save().then((doc) => res.json({ token, user: doc }));
+    } catch (err) {
+        return res.json({ err });
+    }
 })
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (user) {
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (validPassword) {
-            const token = generateAccessToken(user._id, user.name);
-            res.json({ token });
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (user) {
+            const validPassword = await bcrypt.compare(password, user.password);
+            if (validPassword) {
+                const token = generateAccessToken(user._id, user.name);
+                return res.json({ token });
+            } else {
+                return res.status(400).json({ error: "Invalid Password" });
+            }
         } else {
-            res.status(400).json({ error: "Invalid Password" });
+            return res.status(401).json({ error: "User does not exist" });
         }
-    } else {
-        res.status(401).json({ error: "User does not exist" });
+    } catch (err) {
+        return res.json({ err });
     }
 })
 
