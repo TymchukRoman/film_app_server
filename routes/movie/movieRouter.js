@@ -4,72 +4,90 @@ const Movie = require('../../models/movieModel');
 const generateParams = require('./generateParams');
 
 router.get('/all/:page/:limit', async (req, res) => {
-    let { page, limit } = req.params;
+    try {
 
-    const count = await Movie.countDocuments();
+        let { page, limit } = req.params;
 
-    if (limit > 21 || limit < 1) {
-        limit = 21;
+        const count = await Movie.countDocuments();
+
+        if (limit > 21 || limit < 1) {
+            limit = 21;
+        }
+
+        if (page > Math.ceil(count / limit)) {
+            page = Math.ceil(count / limit);
+        }
+
+        const movies = await Movie.find()
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+            .exec();
+
+        return res.json({
+            movies,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
+            limit
+        });
+
+    } catch (err) {
+        return res.json({ err });
     }
-
-    if (page > Math.ceil(count / limit)) {
-        page = Math.ceil(count / limit);
-    }
-
-    const movies = await Movie.find()
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .exec();
-
-
-    res.json({
-        movies,
-        totalPages: Math.ceil(count / limit),
-        currentPage: page,
-        limit
-    });
 })
 
 router.post('/search', async (req, res) => {
-    let { params, page, limit, sort } = req.body;
+    try {
 
-    const searchParams = generateParams(params);
+        let { params, page, limit, sort } = req.body;
 
-    const count = await Movie.find(searchParams).countDocuments();
+        const searchParams = generateParams(params);
 
-    if (limit > 21 || limit < 1) {
-        limit = 21;
+        const count = await Movie.find(searchParams).countDocuments();
+
+        if (limit > 21 || limit < 1) {
+            limit = 21;
+        }
+
+        if (page > Math.ceil(count / limit)) {
+            page = Math.ceil(count / limit) || 1;
+        }
+
+        const movies = await Movie.find(searchParams)
+            .sort(sort)
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+            .exec();
+
+
+            return res.json({
+            movies,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
+            limit
+        });
+
+    } catch (err) {
+        return res.json({ err });
     }
-
-    if (page > Math.ceil(count / limit)) {
-        page = Math.ceil(count / limit);
-    }
-
-    const movies = await Movie.find(searchParams)
-        .sort(sort)
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .exec();
-
-
-    res.json({
-        movies,
-        totalPages: Math.ceil(count / limit),
-        currentPage: page,
-        limit
-    });
 })
 
 router.get('/id/:movieId', async (req, res) => {
-    const { movieId } = req.params;
+    try {
 
-    const movie = await Movie.findById(movieId);
+        const { movieId } = req.params;
 
-    res.json({ movie });
+        const movie = await Movie.findById(movieId);
+
+        return res.json({ movie });
+
+    } catch (err) {
+        return res.json({ err });
+    }
 })
 
 router.get('/genres', async (req, res) => {
     try {
+
         const movies = await Movie.find();
 
         console.log(`Received ${movies.length} movies`);
@@ -91,6 +109,7 @@ router.get('/genres', async (req, res) => {
         })
 
         return res.json({ genres, types });
+
     } catch (err) {
         console.error(err);
     }
