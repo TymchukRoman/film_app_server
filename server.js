@@ -4,6 +4,7 @@ const cors = require('cors');
 const movieRouter = require('./routes/movie/movieRouter');
 const userRouter = require('./routes/user/userRouter');
 const commentRouter = require('./routes/comments/commentsRouter');
+const theaterRouter = require('./routes/theater/theaterRouter');
 const mongoose = require('mongoose');
 
 require('dotenv').config();
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use('/user', userRouter);
 app.use('/movie', movieRouter);
 app.use('/comment', commentRouter);
+app.use('/theater', theaterRouter);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
