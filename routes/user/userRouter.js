@@ -10,7 +10,7 @@ const userValidator = require('./userValidator');
 
 router.post('/me', authenticateToken, (req, res) => {
     return res.json({ user: req.user });
-})
+});
 
 router.post('/register', async (req, res) => {
     try {
@@ -42,7 +42,7 @@ router.post('/register', async (req, res) => {
     } catch (err) {
         return res.json({ err });
     }
-})
+});
 
 router.post('/login', async (req, res) => {
     try {
@@ -59,6 +59,46 @@ router.post('/login', async (req, res) => {
         } else {
             return res.status(401).json({ error: "User does not exist" });
         }
+    } catch (err) {
+        return res.json({ err });
+    }
+});
+
+router.post('/editfavorite', authenticateToken, async (req, res) => {
+    try {
+
+        const { type, movieId } = req.body;
+
+        let favorites = Array.isArray(req.user?.favorites) ? [...req.user.favorites] : [];
+
+        switch (type) {
+            case 'add': {
+                if (favorites.includes(movieId)) {
+                    return res.json({ err: "Movie already in your favorites" })
+                } else {
+                    favorites.push(movieId);
+                    break;
+                }
+            }
+            case 'remove': {
+                if (favorites.includes(movieId)) {
+                    favorites = favorites.filter(tempMovieId => tempMovieId !== movieId);
+                    break;
+                } else {
+                    return res.json({ err: "Movie not in your favorites" })
+                }
+            }
+            default: {
+                return res.json({ err: "Unknown action" });
+            }
+        }
+
+        let doc = await User.findOneAndUpdate({ _id: req.user._id }, { $set: { favorites } }, {
+            returnOriginal: false
+        });
+
+        res.json({ doc, user: req.user._id });
+
     } catch (err) {
         return res.json({ err });
     }
