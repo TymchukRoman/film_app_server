@@ -7,6 +7,7 @@ const authenticateToken = require('../middleware/authMiddleware');
 const bcrypt = require('bcrypt');
 const generateAccessToken = require('./generateJWT');
 const userValidator = require('./userValidator');
+const { default: mongoose } = require('mongoose');
 
 router.post('/me', authenticateToken, (req, res) => {
     return res.json({ user: req.user });
@@ -74,7 +75,7 @@ router.post('/editfavorite', authenticateToken, async (req, res) => {
         switch (type) {
             case 'add': {
                 if (favorites.includes(movieId)) {
-                    return res.json({ err: "Movie already in your favorites" })
+                    return res.json({ err: "Movie already in your favorites" });
                 } else {
                     favorites.push(movieId);
                     break;
@@ -85,7 +86,7 @@ router.post('/editfavorite', authenticateToken, async (req, res) => {
                     favorites = favorites.filter(tempMovieId => tempMovieId !== movieId);
                     break;
                 } else {
-                    return res.json({ err: "Movie not in your favorites" })
+                    return res.json({ err: "Movie not in your favorites" });
                 }
             }
             default: {
@@ -97,7 +98,21 @@ router.post('/editfavorite', authenticateToken, async (req, res) => {
             returnOriginal: false
         });
 
-        res.json({ doc, user: req.user._id });
+        return res.json({ doc, user: req.user._id });
+
+    } catch (err) {
+        return res.json({ err });
+    }
+})
+
+router.post('/favorites', authenticateToken, async (req, res) => {
+    try {
+
+        const favorites = Array.isArray(req.user?.favorites) ? [...req.user.favorites] : [];
+
+        const movies = await Movie.find({ _id: { $in: favorites.map((mId) => mongoose.Types.ObjectId(mId)) } });
+
+        return res.json({ movies, total: movies.length });
 
     } catch (err) {
         return res.json({ err });
