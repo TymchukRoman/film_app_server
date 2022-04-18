@@ -5,6 +5,7 @@ const Comment = require('../../models/commentModel');
 const { default: mongoose } = require('mongoose');
 const authenticateToken = require('../middleware/authMiddleware');
 const commentValidator = require('./commentValidator');
+const Movie = require('../../models/movieModel');
 
 router.get('/get/:movieId', async (req, res) => {
     try {
@@ -36,6 +37,8 @@ router.post('/new', authenticateToken, async (req, res) => {
             text,
             date: moment().toDate()
         });
+
+        await Movie.findOneAndUpdate({ _id: movieId }, { $inc: { num_mflix_comments: 1 } });
 
         return comment.save().then((doc) => res.json({ comment: doc }));
     } catch (err) {
