@@ -59,7 +59,7 @@ router.post('/search', async (req, res) => {
             .exec();
 
 
-            return res.json({
+        return res.json({
             movies,
             totalPages: Math.ceil(count / limit),
             currentPage: page,
@@ -114,6 +114,18 @@ router.get('/genres', async (req, res) => {
         console.error(err);
     }
 
+})
+
+router.get('/hot', async (req, res) => {
+    try {
+
+        const hot_movies = await Movie.find({}).sort('-num_mflix_comments').limit(10).select('num_mflix_comments title');
+
+        res.json({ movies: hot_movies });
+
+    } catch (err) {
+        console.error(err);
+    }
 })
 
 module.exports = router;

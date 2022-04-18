@@ -39,7 +39,17 @@ router.post('/register', async (req, res) => {
 
         const token = generateAccessToken(user._id, user.name);
 
-        return user.save().then((doc) => res.json({ token, user: doc }));
+        return user.save().then((doc) => res.json({
+            token,
+            user: {
+                email: doc.email,
+                favorites: doc.favorites,
+                name: doc.name,
+                registerDatetime: doc.registerDatetime,
+                settings: doc.settings,
+                _id: doc._id
+            }
+        }));
     } catch (err) {
         return res.json({ err });
     }
