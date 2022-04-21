@@ -1,4 +1,5 @@
 const express = require('express');
+const movieGenres = require('../../constants/movie_categories');
 const router = express.Router();
 const Movie = require('../../models/movieModel');
 const generateParams = require('./generateParams');
@@ -116,12 +117,70 @@ router.get('/genres', async (req, res) => {
 
 })
 
-router.get('/hot', async (req, res) => {
+router.get('/top/:cate', async (req, res) => {
     try {
 
-        const hot_movies = await Movie.find({}).sort('-num_mflix_comments').limit(10).select('num_mflix_comments title');
+        const { cate } = req.params;
+
+        let param;
+
+        switch (cate) {
+            case "hot": {
+                param = "num_mflix_comments";
+                break;
+            }
+            case "latest": {
+                param = "released";
+                break;
+            }
+            default: {
+                param = "released";
+                break;
+            }
+        }
+
+        const hot_movies = await Movie.find({}).sort({ [param]: -1 }).limit(10).select(`${param} title`);
 
         res.json({ movies: hot_movies });
+
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+router.get('/categories', async (req, res) => {
+    try {
+
+        const movies = {};
+
+        Promise.all(
+            movieGenres.map(async (genre) => {
+                const random_skip = Math.floor(Math.random() * 10);
+                movies[genre] = await Movie.find({ genres: genre })
+                    .sort('-num_mflix_comments')
+                    .skip(random_skip)
+                    .select("title genres")
+                    .limit(1);
+            })
+        ).then(() => {
+            res.json({ movies: movies });
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+})
+
+router.get('/random', async (req, res) => {
+    try {
+
+        Movie.count().exec((err, count) => {
+            const random = Math.floor(Math.random() * count);
+
+            Movie.findOne().skip(random).select("title -_id").exec((err, movie) => {
+                res.json({ movie });
+            });
+        });
 
     } catch (err) {
         console.error(err);
