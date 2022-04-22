@@ -139,7 +139,7 @@ router.get('/top/:cate', async (req, res) => {
             }
         }
 
-        const hot_movies = await Movie.find({}).sort({ [param]: -1 }).limit(10).select(`${param} title`);
+        const hot_movies = await Movie.find({}).sort({ [param]: -1 }).limit(20);
 
         res.json({ movies: hot_movies });
 
@@ -155,12 +155,14 @@ router.get('/categories', async (req, res) => {
 
         Promise.all(
             movieGenres.map(async (genre) => {
-                const random_skip = Math.floor(Math.random() * 10);
-                movies[genre] = await Movie.find({ genres: genre })
+                const count = await Movie.count({ genres: genre, poster: { $exists: true, $ne: null } });
+                const random_skip = count > 10 ? Math.floor(Math.random() * 10) : Math.floor(Math.random() * count);
+                const genreMovie = await Movie.find({ genres: genre, poster: { $exists: true, $ne: null } })
                     .sort('-num_mflix_comments')
                     .skip(random_skip)
-                    .select("title genres")
+                    .select("title genres poster")
                     .limit(1);
+                movies[genre] = genreMovie[0];
             })
         ).then(() => {
             res.json({ movies: movies });
@@ -174,10 +176,10 @@ router.get('/categories', async (req, res) => {
 router.get('/random', async (req, res) => {
     try {
 
-        Movie.count().exec((err, count) => {
+        Movie.count({ poster: { $exists: true, $ne: null } }).exec((err, count) => {
             const random = Math.floor(Math.random() * count);
 
-            Movie.findOne().skip(random).select("title -_id").exec((err, movie) => {
+            Movie.findOne({ poster: { $exists: true, $ne: null } }).skip(random).select("title _id").exec((err, movie) => {
                 res.json({ movie });
             });
         });
