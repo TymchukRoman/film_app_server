@@ -28,7 +28,8 @@ router.get('/all/:page/:limit', async (req, res) => {
             movies,
             totalPages: Math.ceil(count / limit),
             currentPage: page,
-            limit
+            limit,
+            total: count
         });
 
     } catch (err) {
@@ -64,7 +65,8 @@ router.post('/search', async (req, res) => {
             movies,
             totalPages: Math.ceil(count / limit),
             currentPage: page,
-            limit
+            limit,
+            total: count
         });
 
     } catch (err) {
