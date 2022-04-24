@@ -191,4 +191,41 @@ router.get('/random', async (req, res) => {
     }
 })
 
+router.post('/ids', async (req, res) => {
+    try {
+
+        let { movieIds } = req.body;
+
+        if (!movieIds?.length) {
+            return res.json({ error: 'No ids' });
+        }
+
+        if (movieIds?.length > 5) {
+            return res.json({ error: "Cant fetch more than 5 movies" });
+        }
+
+        const movies = [];
+
+        Promise.all(
+            movieIds.map(async (id) => {
+                const movie = await Movie.findById(id);
+                movies.push(movie);
+            })
+        ).then(() => {
+            return res.json({
+                movies: [
+                    ...movieIds.map(id => {
+                        return movies.find(movie => movie._id.toString() === id);
+                    })
+                ]
+            });
+        })
+
+
+    } catch (err) {
+        return res.json({ err });
+    }
+})
+
+
 module.exports = router;

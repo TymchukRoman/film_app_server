@@ -15,7 +15,7 @@ const movieSchema = new mongoose.Schema({
     },
     cast: {
         type: Array,
-        required: true
+        required: false
     },
     num_mflix_comments: {
         type: Number,
@@ -27,7 +27,7 @@ const movieSchema = new mongoose.Schema({
     },
     fullplot: {
         type: String,
-        required: true
+        required: false
     },
     countries: {
         type: Array,
