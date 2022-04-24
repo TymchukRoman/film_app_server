@@ -6,13 +6,13 @@ const generateParams = (params) => {
             {
                 $or: [
                     {
-                        plot: { $regex: '.*' + params.text + '.*' }
+                        plot: { $regex: new RegExp(params.text, "i") }
                     },
                     {
-                        title: { $regex: '.*' + params.text + '.*' }
+                        title: { $regex: new RegExp(params.text, "i") }
                     },
                     {
-                        fullplot: { $regex: '.*' + params.text + '.*' }
+                        fullplot: { $regex: new RegExp(params.text, "i") }
                     }
                 ]
             }
