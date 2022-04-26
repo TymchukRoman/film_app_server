@@ -51,6 +51,14 @@ const generateParams = (params) => {
         )
     }
 
+    if (params.witPoster) {
+        searchParams.$and.push(
+            {
+                poster: { $exists: true, $ne: null }
+            }
+        )
+    }
+
     return searchParams;
 }
 
