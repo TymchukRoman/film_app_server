@@ -196,12 +196,15 @@ router.post('/ids', async (req, res) => {
 
         let { movieIds } = req.body;
 
+        let resError = null;
+
         if (!movieIds?.length) {
             return res.json({ error: 'No ids' });
         }
 
         if (movieIds?.length > 5) {
-            return res.json({ error: "Cant fetch more than 5 movies" });
+            resError = { error: "Cant fetch more than 5 movies" };
+            movieIds = movieIds.slice(0, 5);
         }
 
         const movies = [];
@@ -213,6 +216,7 @@ router.post('/ids', async (req, res) => {
             })
         ).then(() => {
             return res.json({
+                resError,
                 movies: [
                     ...movieIds.map(id => {
                         return movies.find(movie => movie._id.toString() === id);

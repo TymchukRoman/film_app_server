@@ -118,9 +118,11 @@ router.post('/editfavorite', authenticateToken, async (req, res) => {
 router.post('/favorites', authenticateToken, async (req, res) => {
     try {
 
+        const { amount } = req.body;
+
         const favorites = Array.isArray(req.user?.favorites) ? [...req.user.favorites] : [];
 
-        const movies = await Movie.find({ _id: { $in: favorites.map((mId) => mongoose.Types.ObjectId(mId)) } });
+        const movies = await Movie.find({ _id: { $in: favorites.map((mId) => mongoose.Types.ObjectId(mId)) } }).limit(amount || favorites.length);
 
         return res.json({ movies, total: movies.length });
 
