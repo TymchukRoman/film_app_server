@@ -2,19 +2,17 @@ const generateParams = (params) => {
     let searchParams = { $and: [] };
 
     if (params.text) {
+        const textFilterArray = [];
+
+        textFilterArray.push({ title: { $regex: new RegExp(params.text, "i") } });
+
+        if (params.textInPlot) {
+            textFilterArray.push({ plot: { $regex: new RegExp(params.text, "i") } }, { fullplot: { $regex: new RegExp(params.text, "i") } });
+        }
+
         searchParams.$and.push(
             {
-                $or: [
-                    {
-                        plot: { $regex: new RegExp(params.text, "i") }
-                    },
-                    {
-                        title: { $regex: new RegExp(params.text, "i") }
-                    },
-                    {
-                        fullplot: { $regex: new RegExp(params.text, "i") }
-                    }
-                ]
+                $or: [...textFilterArray]
             }
         )
     }
