@@ -28,7 +28,7 @@ const generateParams = (params) => {
     if (params.year) {
         searchParams.$and.push(
             {
-                year: { $gt: params.year.from, $lt: params.year.to }
+                year: { $gte: params.year.from, $lte: params.year.to }
             }
         )
     }
