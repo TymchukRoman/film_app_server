@@ -5,6 +5,7 @@ const movieRouter = require('./routes/movie/movieRouter');
 const userRouter = require('./routes/user/userRouter');
 const commentRouter = require('./routes/comments/commentsRouter');
 const theaterRouter = require('./routes/theater/theaterRouter');
+const catsRouter = require('./routes/cats/catsRouter');
 const mongoose = require('mongoose');
 
 require('dotenv').config();
@@ -30,6 +31,7 @@ app.use('/user', userRouter);
 app.use('/movie', movieRouter);
 app.use('/comment', commentRouter);
 app.use('/theater', theaterRouter);
+app.use('/cats', catsRouter);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
