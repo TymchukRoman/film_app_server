@@ -57,6 +57,58 @@ const generateParams = (params) => {
         )
     }
 
+    if (params.directors) {
+        searchParams.$and.push(
+            {
+                directors: { $all: [...params.directors] }
+            }
+        )
+    }
+
+    if (params.writers) {
+        searchParams.$and.push(
+            {
+                writers: { $all: [...params.writers] }
+            }
+        )
+    }
+
+    if (params.countries) {
+        searchParams.$and.push(
+            {
+                countries: { $all: [...params.countries] }
+            }
+        )
+    }
+
+    if (params.cast) {
+        searchParams.$and.push(
+            {
+                cast: { $all: [...params.cast] }
+            }
+        )
+    }
+
+    if (params.languages) {
+        searchParams.$and.push(
+            {
+                languages: { $all: [...params.languages] }
+            }
+        )
+    }
+
+    if (params.rates?.length) {
+        searchParams.$and.push(
+            {
+                rated: { $in: [...params.rates] }
+            }
+        )
+    }
+
+    if (!searchParams?.$and?.length) {
+        return {};
+    }
+
     return searchParams;
 }
 

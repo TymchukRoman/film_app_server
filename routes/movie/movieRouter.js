@@ -46,11 +46,11 @@ router.post('/search', async (req, res) => {
 
         const count = await Movie.find(searchParams).countDocuments();
 
-        if (limit > 21 || limit < 1) {
+        if (!limit || limit > 21 || limit < 1) {
             limit = 21;
         }
 
-        if (page > Math.ceil(count / limit)) {
+        if (!page || page > Math.ceil(count / limit)) {
             page = Math.ceil(count / limit) || 1;
         }
 
@@ -86,37 +86,6 @@ router.get('/id/:movieId', async (req, res) => {
     } catch (err) {
         return res.json({ err });
     }
-})
-
-router.get('/genres', async (req, res) => {
-    try {
-
-        const movies = await Movie.find();
-
-        console.log(`Received ${movies.length} movies`);
-
-        const genres = [];
-        const types = [];
-
-        movies.forEach(movie => {
-            movie?.genres?.forEach(genre => {
-                if (!genres.includes(genre)) {
-                    console.log(`Getted genre: ${genre}`);
-                    genres.push(genre);
-                }
-            })
-            if (!types.includes(movie.type)) {
-                console.log(`Getted type: ${movie.type}`);
-                types.push(movie.type);
-            }
-        })
-
-        return res.json({ genres, types });
-
-    } catch (err) {
-        console.error(err);
-    }
-
 })
 
 router.get('/top/:cate', async (req, res) => {
