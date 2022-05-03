@@ -16,7 +16,7 @@ router.get('/:cat/:search?', async (req, res) => {
         const params = search ? { name: { $regex: new RegExp(search, "i") } } : {}
 
         switch (cat) {
-            case 'actor': {
+            case 'actors': {
                 try {
                     const actors = await Actor.find(params)
                         .sort('name')
@@ -28,7 +28,7 @@ router.get('/:cat/:search?', async (req, res) => {
                     return console.log(err);
                 }
             }
-            case 'countrie': {
+            case 'countries': {
                 try {
                     const countries = await Countrie.find(params)
                         .sort('name')
@@ -41,7 +41,7 @@ router.get('/:cat/:search?', async (req, res) => {
                 }
 
             }
-            case 'director': {
+            case 'directors': {
                 try {
                     const directors = await Director.find(params)
                         .sort('name')
@@ -54,7 +54,7 @@ router.get('/:cat/:search?', async (req, res) => {
                 }
 
             }
-            case 'genre': {
+            case 'genres': {
                 try {
                     const genres = await Genre.find(params)
                         .sort('name')
@@ -66,7 +66,7 @@ router.get('/:cat/:search?', async (req, res) => {
                 }
 
             }
-            case 'language': {
+            case 'languages': {
                 try {
                     const languages = await Language.find(params)
                         .sort('name')
@@ -79,7 +79,7 @@ router.get('/:cat/:search?', async (req, res) => {
                 }
 
             }
-            case 'rate': {
+            case 'rates': {
                 try {
                     const rates = await Rate.find(params)
                         .sort('name')
@@ -91,7 +91,7 @@ router.get('/:cat/:search?', async (req, res) => {
                 }
 
             }
-            case 'writer': {
+            case 'writers': {
                 try {
                     const writers = await Writer.find(params)
                         .sort('name')
