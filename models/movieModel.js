@@ -108,6 +108,10 @@ const movieSchema = new mongoose.Schema({
     poster: {
         type: String,
         required: false
+    },
+    languages: {
+        type: Array,
+        required: false
     }
 
 }, { collection: 'movies' })
