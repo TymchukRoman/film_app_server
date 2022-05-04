@@ -1,6 +1,5 @@
 const generateParams = (params) => {
     let searchParams = { $and: [] };
-
     if (params.text) {
         const textFilterArray = [];
 
@@ -49,15 +48,15 @@ const generateParams = (params) => {
         )
     }
 
-    if (params.witPoster) {
+    if (params.withPoster) {
         searchParams.$and.push(
             {
-                poster: { $exists: true, $ne: null }
+                poster: { $exists: true, $nin: [undefined, "", null] }
             }
         )
     }
 
-    if (params.directors) {
+    if (params.directors?.length) {
         searchParams.$and.push(
             {
                 directors: { $all: [...params.directors] }
@@ -65,7 +64,7 @@ const generateParams = (params) => {
         )
     }
 
-    if (params.writers) {
+    if (params.writers?.length) {
         searchParams.$and.push(
             {
                 writers: { $all: [...params.writers] }
@@ -73,7 +72,7 @@ const generateParams = (params) => {
         )
     }
 
-    if (params.countries) {
+    if (params.countries?.length) {
         searchParams.$and.push(
             {
                 countries: { $all: [...params.countries] }
@@ -81,15 +80,15 @@ const generateParams = (params) => {
         )
     }
 
-    if (params.cast) {
+    if (params.actors?.length) {
         searchParams.$and.push(
             {
-                cast: { $all: [...params.cast] }
+                cast: { $all: [...params.actors] }
             }
         )
     }
 
-    if (params.languages) {
+    if (params.languages?.length) {
         searchParams.$and.push(
             {
                 languages: { $all: [...params.languages] }

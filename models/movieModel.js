@@ -112,6 +112,10 @@ const movieSchema = new mongoose.Schema({
     languages: {
         type: Array,
         required: false
+    },
+    writers: {
+        type: Array,
+        required: false
     }
 
 }, { collection: 'movies' })
