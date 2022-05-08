@@ -59,7 +59,7 @@ const generateParams = (params) => {
     if (params.directors?.length) {
         searchParams.$and.push(
             {
-                directors: { $all: [...params.directors] }
+                directors: { $in: [...params.directors] }
             }
         )
     }
@@ -67,7 +67,7 @@ const generateParams = (params) => {
     if (params.writers?.length) {
         searchParams.$and.push(
             {
-                writers: { $all: [...params.writers] }
+                writers: { $in: [...params.writers] }
             }
         )
     }
@@ -75,7 +75,7 @@ const generateParams = (params) => {
     if (params.countries?.length) {
         searchParams.$and.push(
             {
-                countries: { $all: [...params.countries] }
+                countries: { $in: [...params.countries] }
             }
         )
     }
@@ -83,7 +83,7 @@ const generateParams = (params) => {
     if (params.actors?.length) {
         searchParams.$and.push(
             {
-                cast: { $all: [...params.actors] }
+                cast: { $in: [...params.actors] }
             }
         )
     }
@@ -91,7 +91,7 @@ const generateParams = (params) => {
     if (params.languages?.length) {
         searchParams.$and.push(
             {
-                languages: { $all: [...params.languages] }
+                languages: { $in: [...params.languages] }
             }
         )
     }

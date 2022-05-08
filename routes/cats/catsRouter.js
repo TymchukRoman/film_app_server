@@ -19,7 +19,6 @@ router.get('/:cat/:search?', async (req, res) => {
             case 'actors': {
                 try {
                     const actors = await Actor.find(params)
-                        .sort('name')
                         .limit(20)
                         .exec();
 
@@ -31,7 +30,6 @@ router.get('/:cat/:search?', async (req, res) => {
             case 'countries': {
                 try {
                     const countries = await Countrie.find(params)
-                        .sort('name')
                         .limit(20)
                         .exec();
 
@@ -44,7 +42,6 @@ router.get('/:cat/:search?', async (req, res) => {
             case 'directors': {
                 try {
                     const directors = await Director.find(params)
-                        .sort('name')
                         .limit(20)
                         .exec();
 
@@ -57,7 +54,6 @@ router.get('/:cat/:search?', async (req, res) => {
             case 'genres': {
                 try {
                     const genres = await Genre.find(params)
-                        .sort('name')
                         .exec();
 
                     return res.json({ genres });
@@ -69,7 +65,6 @@ router.get('/:cat/:search?', async (req, res) => {
             case 'languages': {
                 try {
                     const languages = await Language.find(params)
-                        .sort('name')
                         .limit(20)
                         .exec();
 
@@ -82,7 +77,6 @@ router.get('/:cat/:search?', async (req, res) => {
             case 'rates': {
                 try {
                     const rates = await Rate.find(params)
-                        .sort('name')
                         .exec();
 
                     return res.json({ rates });
@@ -94,7 +88,6 @@ router.get('/:cat/:search?', async (req, res) => {
             case 'writers': {
                 try {
                     const writers = await Writer.find(params)
-                        .sort('name')
                         .limit(20)
                         .exec();
 
