@@ -19,7 +19,7 @@ const generateParams = (params) => {
     if (params.genres?.length) {
         searchParams.$and.push(
             {
-                genres: { $all: [...params.genres] }
+                genres: { [params.genresLogic || "$in"]: [...params.genres] }
             }
         )
     }
@@ -59,7 +59,7 @@ const generateParams = (params) => {
     if (params.directors?.length) {
         searchParams.$and.push(
             {
-                directors: { $in: [...params.directors] }
+                directors: { [params.directorsLogic || "$in"]: [...params.directors] }
             }
         )
     }
@@ -67,7 +67,7 @@ const generateParams = (params) => {
     if (params.writers?.length) {
         searchParams.$and.push(
             {
-                writers: { $in: [...params.writers] }
+                writers: { [params.writersLogic || "$in"]: [...params.writers] }
             }
         )
     }
@@ -75,7 +75,7 @@ const generateParams = (params) => {
     if (params.countries?.length) {
         searchParams.$and.push(
             {
-                countries: { $in: [...params.countries] }
+                countries: { [params.countriesLogic || "$in"]: [...params.countries] }
             }
         )
     }
@@ -83,7 +83,7 @@ const generateParams = (params) => {
     if (params.actors?.length) {
         searchParams.$and.push(
             {
-                cast: { $in: [...params.actors] }
+                cast: { [params.actorsLogic || "$in"]: [...params.actors] }
             }
         )
     }
@@ -91,7 +91,7 @@ const generateParams = (params) => {
     if (params.languages?.length) {
         searchParams.$and.push(
             {
-                languages: { $in: [...params.languages] }
+                languages: { [params.languagesLogic || "$in"]: [...params.languages] }
             }
         )
     }
