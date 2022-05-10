@@ -21,6 +21,11 @@ const commentSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    replies: {
+        type: Array,
+        required: true,
+        default: []
+    }
 }, { collection: 'comments' });
 
 module.exports = mongoose.model("comment", commentSchema);
