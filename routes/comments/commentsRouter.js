@@ -17,9 +17,9 @@ router.get('/get/:movieId', async (req, res) => {
 
         return res.json({ comments });
     } catch (err) {
-        return res.json({ err })
+        return res.json({ err });
     }
-})
+});
 
 router.post('/new', authenticateToken, async (req, res) => {
     try {
@@ -44,6 +44,36 @@ router.post('/new', authenticateToken, async (req, res) => {
     } catch (err) {
         return res.json({ err });
     }
-})
+});
+
+router.post('/reply', authenticateToken, async (req, res) => {
+    try {
+        const { commentId, text } = req.body;
+
+        const { error } = commentValidator.commentPostValidation(commentId, text);
+        if (error) {
+            return res.json({ error });
+        }
+
+        const isExist = await Comment.findOne({ _id: commentId });
+
+        if (!isExist) {
+            return res.json({ err: "Comment not found" });
+        }
+
+        const comment = {
+            name: req.user?.name,
+            email: req.user?.email,
+            text,
+            date: moment().toDate()
+        };
+
+        const doc = await Comment.findOneAndUpdate({ _id: commentId }, { $push: { replies: comment } }, { new: true });
+
+        return res.json({ comment: doc });
+    } catch (err) {
+        return res.json({ err });
+    }
+});
 
 module.exports = router;
