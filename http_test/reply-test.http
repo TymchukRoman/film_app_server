@@ -1,0 +1,25 @@
+
+POST http://localhost:5000/comment/reply HTTP/1.1
+content-type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjdhY2E4NDAyMzYwODRiMDFmODMxYTciLCJuYW1lIjoiUmVwbGllcmJvdCIsImlhdCI6MTY1MjIxNDQwNCwiZXhwIjoxNjUyMjE5NDA0fQ.pYayqMT5wK8cTFPKEdoX_b6ZDm11aP1Zm6f31YIG33o",
+    "commentId":"573a13b2f29313caabd3945e", 
+    "text": "Ehehe" 
+}
+
+#############################
+
+POST http://localhost:5000/comment/new HTTP/1.1
+content-type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjRjOTlhZjRmZWVlMzRhNjdhOGVmNDUiLCJuYW1lIjoiQWxpIFR5IiwiaWF0IjoxNjUyMjE0MzA4LCJleHAiOjE2NTIyMTkzMDh9.RoUPPl29cdyToe7GX_NEz1uyiXEKANvcw6wrWbaaKfs",
+    "movieId":"573a13b2f29313caabd3945e", 
+    "text": "Shitty film ofc)))))" 
+}
+
+#############################
+
+GET http://localhost:5000/comment/get/573a13b2f29313caabd3945e HTTP/1.1
+content-type: application/json

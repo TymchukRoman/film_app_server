@@ -1,0 +1,13 @@
+POST http://localhost:5000/comment/new HTTP/1.1
+content-type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjRjOTlhZjRmZWVlMzRhNjdhOGVmNDUiLCJuYW1lIjoiQWxpIFR5IiwiaWF0IjoxNjQ5OTY3OTA4LCJleHAiOjE2NDk5NzI5MDh9.VOoApyJGXtlFK1K-c4CRsZRKAKzebHpmD-veAKTj29c",
+    "movieId":"573a1390f29313caabcd4323", 
+    "text": "New" 
+}
+
+#############################
+
+GET http://localhost:5000/comment/get/573a1390f29313caabcd4323 HTTP/1.1
+content-type: application/json

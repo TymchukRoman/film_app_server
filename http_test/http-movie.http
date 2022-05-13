@@ -1,0 +1,50 @@
+GET http://localhost:5000/movie/all/1/10 HTTP/1.1
+content-type: application/json
+
+#######################
+
+GET http://localhost:5000/movie/id/573a13a1f29313caabd06765 HTTP/1.1
+content-type: application/json
+
+#######################
+
+POST http://localhost:5000/movie/leaveComment HTTP/1.1
+content-type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjRjOTlhZjRmZWVlMzRhNjdhOGVmNDUiLCJ1c2VybmFtZSI6IkFsaSBUeSIsImlhdCI6MTY0OTE4NzI2OCwiZXhwIjoxNjQ5MTkyMjY4fQ.wfxDZxwjNHO34c_jo9Stk0e8sSUhrBXl_2RcGSNHd10",
+    "text": "New comment from Ali Ty",
+    "movie_id": "573a13a1f29313caabd06765"
+}
+
+################################
+POST http://localhost:5000/movie/search HTTP/1.1
+content-type: application/json
+
+{
+    "params":{
+        "countries": ["Ukraine"]
+    }
+}
+
+#######################
+
+GET http://localhost:5000/movie/genres HTTP/1.1
+content-type: application/json
+
+#######################
+
+GET http://localhost:5000/movie/top/hot HTTP/1.1
+content-type: application/json
+
+#######################
+
+GET http://localhost:5000/movie/categories HTTP/1.1
+content-type: application/json
+
+#######################
+
+GET http://localhost:5000/movie/random HTTP/1.1
+content-type: application/json
+
+#######################

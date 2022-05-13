@@ -1,0 +1,50 @@
+POST http://localhost:5000/user/me HTTP/1.1
+content-type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjRjOTlhZjRmZWVlMzRhNjdhOGVmNDUiLCJuYW1lIjoiQWxpIFR5IiwiaWF0IjoxNjQ5NzcyOTE4LCJleHAiOjE2NDk3Nzc5MTh9.Ti4D6zK8YqCNb308txGTTu3gNYnBqiP7D_ZgNtw7H7M"
+}
+
+##############################
+
+POST http://localhost:5000/user/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "examples@example.com",
+    "password": "111222"
+}
+
+##############################
+
+POST http://localhost:5000/user/register HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Replierbot",
+    "email": "bot@gmail.com",
+    "password": "111222"
+}
+
+######
+
+POST http://localhost:5000/user/editfavorite HTTP/1.1
+content-type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjRjOTlhZjRmZWVlMzRhNjdhOGVmNDUiLCJuYW1lIjoiQWxpIFR5IiwiaWF0IjoxNjUwMjA2NzAxLCJleHAiOjE2NTAyMTE3MDF9.bQKZR8tXUfcYhN6MKVVOXrYXQQvx6k0ajmw5GLboB5w",
+    "type": "add",
+    "movieId": "573a13a1f29313caabd06763"
+}
+
+######
+
+
+POST http://localhost:5000/user/favorites HTTP/1.1
+content-type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjRjOTlhZjRmZWVlMzRhNjdhOGVmNDUiLCJuYW1lIjoiQWxpIFR5IiwiaWF0IjoxNjUwMjE5MTEzLCJleHAiOjE2NTAyMjQxMTN9.r8kcBdjJLH7AckEC8w7BXdRjOYMXN0QpGuttmzvBn_o"
+}
+
+######

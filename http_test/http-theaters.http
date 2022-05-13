@@ -1,0 +1,9 @@
+GET http://localhost:5000/theater/all HTTP/1.1
+content-type: application/json
+
+#######################
+
+GET http://localhost:5000/theater/search/89436 HTTP/1.1
+content-type: application/json
+
+#######################
