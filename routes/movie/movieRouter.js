@@ -4,10 +4,10 @@ const router = express.Router();
 const Movie = require('../../models/movieModel');
 const generateParams = require('./generateParams');
 
-router.get('/all/:page/:limit', async (req, res) => {
+router.get('/all/:page/:limit/:sort', async (req, res) => {
     try {
 
-        let { page, limit } = req.params;
+        let { page, limit, sort } = req.params;
 
         const count = await Movie.countDocuments();
 
@@ -20,6 +20,7 @@ router.get('/all/:page/:limit', async (req, res) => {
         }
 
         const movies = await Movie.find()
+            .sort(sort)
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec();
