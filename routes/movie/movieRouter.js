@@ -11,8 +11,8 @@ router.get('/all/:page/:limit/:sort', async (req, res) => {
 
         const count = await Movie.countDocuments();
 
-        if (limit > 21 || limit < 1) {
-            limit = 21;
+        if (limit > 50 || limit < 1) {
+            limit = 50;
         }
 
         if (page > Math.ceil(count / limit)) {
@@ -47,8 +47,8 @@ router.post('/search', async (req, res) => {
 
         const count = await Movie.find(searchParams).countDocuments();
 
-        if (!limit || limit > 21 || limit < 1) {
-            limit = 21;
+        if (!limit || limit > 50 || limit < 1) {
+            limit = 50;
         }
 
         if (!page || page > Math.ceil(count / limit)) {
