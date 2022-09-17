@@ -4,15 +4,15 @@ const router = express.Router();
 const Movie = require('../../models/movieModel');
 const generateParams = require('./generateParams');
 
-router.get('/all/:page/:limit', async (req, res) => {
+router.get('/all/:page/:limit/:sort', async (req, res) => {
     try {
 
-        let { page, limit } = req.params;
+        let { page, limit, sort } = req.params;
 
         const count = await Movie.countDocuments();
 
-        if (limit > 21 || limit < 1) {
-            limit = 21;
+        if (limit > 50 || limit < 1) {
+            limit = 50;
         }
 
         if (page > Math.ceil(count / limit)) {
@@ -20,6 +20,7 @@ router.get('/all/:page/:limit', async (req, res) => {
         }
 
         const movies = await Movie.find()
+            .sort(sort)
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .exec();
@@ -46,8 +47,8 @@ router.post('/search', async (req, res) => {
 
         const count = await Movie.find(searchParams).countDocuments();
 
-        if (!limit || limit > 21 || limit < 1) {
-            limit = 21;
+        if (!limit || limit > 50 || limit < 1) {
+            limit = 50;
         }
 
         if (!page || page > Math.ceil(count / limit)) {
